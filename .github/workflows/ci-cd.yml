@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install Django dependencies
+      run: |
+        cd django_backend
+        pip install -r requirements.txt
+
+    - name: Run Django tests
+      run: |
+        cd django_backend
+        python manage.py test
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Node.js dependencies
+      run: |
+        cd node_notifications
+        npm install
+
+    - name: Run Node.js tests
+      run: |
+        cd node_notifications
+        npm test
+
+    - name: Build and push Docker images
+      run: |
+        # Login to Docker Hub
+        echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        # Build Docker images
+        docker build -t your-django-image-name ./django_backend
+        docker build -t your-node-image-name ./node_notifications
+        # Push Docker images
+        docker push your-django-image-name
+        docker push your-node-image-name
+
+    - name: Deploy to Server
+      run: |
+        ssh user@yourserver "docker pull your-django-image-name && docker pull your-node-image-name && docker-compose -f /path/to/docker-compose.yml up -d"

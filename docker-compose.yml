@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  django:
+    build:
+      context: ./django_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./django_backend:/app
+    depends_on:
+      - db
+
+  node:
+    build:
+      context: ./node_notifications
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./node_notifications:/usr/src/app
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
