@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\Miflow\Documents\GitHub\NimbusDocs\venv
+set VIRTUAL_ENV=C:\Users\Miflow\Documents\GitHub\NimbusDocs\django_backend\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

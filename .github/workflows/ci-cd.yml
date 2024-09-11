@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +21,7 @@ jobs:
     - name: Install Django dependencies
       run: |
         cd django_backend
+        pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Run Django tests
@@ -56,4 +57,6 @@ jobs:
 
     - name: Deploy to Server
       run: |
-        ssh user@yourserver "docker pull your-django-image-name && docker pull your-node-image-name && docker-compose -f /path/to/docker-compose.yml up -d"
+        ssh -o StrictHostKeyChecking=no user@yourserver "docker pull your-django-image-name && docker pull your-node-image-name && docker-compose -f /path/to/docker-compose.yml up -d"
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

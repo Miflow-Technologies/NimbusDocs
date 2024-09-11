@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:14
+FROM node:14-slim
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY node_notifications/package*.json ./
 
 # Install any needed packages specified in package.json
-RUN npm install
+RUN npm install --production
 
 # Copy the rest of the application code
 COPY node_notifications/ .
